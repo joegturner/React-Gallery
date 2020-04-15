@@ -1,4 +1,3 @@
-// stateless
 import React from 'react';
 
 const Photo = ({ id, farm, server, secret }) => {
