@@ -4,7 +4,8 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import createHistory from "history/createBrowserHistory";
+// import createHistory from "history/createBrowserHistory";
+import { createBrowserHistory } from 'history';
 import axios from 'axios';
 
 // App components
@@ -51,7 +52,6 @@ export default class App extends Component {
     axios.get(fetchURL)
       .then(response => {
         if (!preLoad) {
-          console.log(query);
           this.setState({
             photos: response.data.photos.photo,
             loading: false
@@ -99,10 +99,10 @@ export default class App extends Component {
   }
 
   render() {
-    const history = createHistory();
+    const history = createBrowserHistory();
 
     return (
-      <HashRouter basename={"/react-gallery"} forceRefresh={true}>
+      <HashRouter forceRefresh={true}>
         <div className="container">
           <SearchForm onSearch={this.performSearch} history={history}/>
           <MainNav defaults={this.state.defaultSets} />
@@ -111,7 +111,7 @@ export default class App extends Component {
             {this.generateDefaultRoutes()}
             {
               (this.state.loading)
-              ? <p>Loading...</p>
+              ? <h1>'Loading...'</h1>
               : <Route path='/search/:item' render={ (props) => <PhotoContainer {...props}data={this.state.photos}/>} />
             }
             <Route component={Error}/>
