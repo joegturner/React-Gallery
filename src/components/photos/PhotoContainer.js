@@ -31,12 +31,10 @@ class PhotoContainer extends Component {
         const { match } = this.props;
         let infoText = '';
 
-        console.log(this.props.match);
         if (match.params.item) {
-            infoText = `"${match.params.item}" Results`;
+            infoText = `${match.params.item} Results`;
         } else {
-            infoText = `"${match.url.replace('/', '')}" Results`;
-            console.log(infoText);
+            infoText = `${match.url.replace('/', '')} Results`;
         }
         return infoText; 
     }
