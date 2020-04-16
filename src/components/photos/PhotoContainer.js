@@ -5,6 +5,7 @@ import NotFound from '../NotFound';
 
 class PhotoContainer extends Component {
 
+    
     getPhotos = () => {
         const { data } = this.props;
         let photos;
@@ -40,12 +41,16 @@ class PhotoContainer extends Component {
     }
 
     render() {
+        const { loading } = this.props;
+
         return (
             <div className="photo-container">
                 <h2>{this.getText()}</h2>
-                <ul>
-                {this.getPhotos()}  
-                </ul>
+                {
+                    (loading)
+                    ? <h2>Loading...</h2>
+                    : <ul>{this.getPhotos()}</ul>
+                }
             </div>
         )
     }
