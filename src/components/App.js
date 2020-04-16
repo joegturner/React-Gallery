@@ -38,11 +38,16 @@ export default class App extends Component {
   componentDidMount = () => {
     const defaults = this.state.defaultSets;
 
-    this.performSearch('rainbows', false, 0);
+    this.performSearch();
 
     for (let i = 0; i < defaults.length; i++) {
       this.performSearch(defaults[i], true);
     }
+
+  }
+
+  setLoading = () => {
+    this.setState({ loading: true });
   }
 
   /** fetch from flickr */
@@ -69,6 +74,7 @@ export default class App extends Component {
   // loads photo data for Main Nav buttons
   savePhotos = (query, data) => {
     this.setState({
+      loading: false,
       defaultPhotos: {
         ...this.state.defaultPhotos,
         [`${query}`]: data
@@ -81,6 +87,7 @@ export default class App extends Component {
     let routes = [];
     const sets = this.state.defaultSets;
     const photos = this.state.defaultPhotos;
+    const loading = this.state.loading;
     for (let i = 0; i < sets.length; i++) {
       routes.push(
         <Route 
@@ -91,6 +98,7 @@ export default class App extends Component {
               {...props}
               key={i+100}
               data={photos[`${sets[i]}`]}
+              loading={loading}
               />} 
         />
       )
@@ -100,20 +108,16 @@ export default class App extends Component {
 
   render() {
     const history = createBrowserHistory();
-
+    
     return (
       <HashRouter forceRefresh={true}>
         <div className="container">
-          <SearchForm onSearch={this.performSearch} history={history}/>
+          <SearchForm onSearch={this.performSearch} setLoading={this.setLoading} history={history}/>
           <MainNav defaults={this.state.defaultSets} />
           <Switch>
-            <Route exact path='/' render={ (props) => <PhotoContainer {...props} data={this.state.photos}/>} />
+            <Route exact path='/' render={ (props) => <PhotoContainer {...props} data={this.state.photos} loading={this.state.loading}/>} />
             {this.generateDefaultRoutes()}
-            {
-              (this.state.loading)
-              ? <h1>'Loading...'</h1>
-              : <Route path='/search/:item' render={ (props) => <PhotoContainer {...props}data={this.state.photos}/>} />
-            }
+            <Route path='/search/:item' render={ (props) => <PhotoContainer {...props} data={this.state.photos} loading={this.state.loading}/>} />
             <Route component={Error}/>
           </Switch>
         </div>
